@@ -20,9 +20,20 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
 io.on("connection", function(socket) {
+    console.log("New connection:", socket.id);
+
+    socket.on("join-room", function(room) {
+        socket.join(room);
+        console.log(`User ${socket.id} joined room: ${room}`);
+    });
 
     socket.on("send-location", function(data) {
-        io.emit("receive-location", { id: socket.id, ...data });
+        const { room, ...locationData } = data;
+        if (room) {
+            io.to(room).emit("receive-location", { id: socket.id, ...locationData });
+        } else {
+            io.emit("receive-location", { id: socket.id, ...locationData });
+        }
     });
 
     socket.on("disconnect", function() {

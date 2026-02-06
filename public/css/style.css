@@ -4,12 +4,227 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #map {
     width: 100%;
     height: 100%;
+    z-index: 1;
+}
+
+.tracker-header {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 10px 25px;
+    border-radius: 50px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.tracker-header h1 {
+    font-size: 1.2rem;
+    color: #333;
+    white-space: nowrap;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.status-badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+/* Status States */
+.status-badge.connected {
+    background: #e6fcf5;
+    color: #0ca678;
+}
+
+.status-badge.connected .dot {
+    background: #0ca678;
+}
+
+.status-badge.connecting {
+    background: #fff9db;
+    color: #f08c00;
+}
+
+.status-badge.connecting .dot {
+    background: #f08c00;
+    animation: pulse-yellow 1.5s infinite;
+}
+
+.status-badge.disconnected {
+    background: #fff5f5;
+    color: #fa5252;
+}
+
+.status-badge.disconnected .dot {
+    background: #fa5252;
+}
+
+/* Recenter Button */
+#recenter-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+#recenter-btn:hover {
+    transform: scale(1.1);
+    background: #f8f9fa;
+}
+
+#recenter-btn:active {
+    transform: scale(0.95);
+}
+
+/* Marker Animations & Rotation */
+.leaflet-marker-icon {
+    transition: transform 0.3s ease-out, filter 0.3s ease;
+    z-index: 1000 !important;
+}
+
+.marker-core {
+    transition: transform 0.3s ease-out, background-color 0.3s ease;
+    transform-origin: center;
+}
+
+.self-marker-wrapper {
+    z-index: 1001 !important;
+}
+
+.self-marker-wrapper .marker-core {
+    filter: drop-shadow(0 0 8px rgba(0, 123, 255, 0.6));
+}
+
+.pulse-animation {
+    animation: marker-pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+@keyframes marker-pulse {
+    0% {
+        transform: scale(1) rotate(var(--rotation, 0deg));
+    }
+
+    50% {
+        transform: scale(1.15) rotate(var(--rotation, 0deg));
+    }
+
+    100% {
+        transform: scale(1) rotate(var(--rotation, 0deg));
+    }
+}
+
+@keyframes pulse-yellow {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* V3 Search Control tweaks */
+.leaflet-control-geocoder {
+    margin-top: 80px !important;
+    /* Avoid header overlap */
+    z-index: 1000 !important;
+}
+
+/* V3 Routing Control minimal style */
+.leaflet-routing-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5px);
+    max-height: 250px;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin-right: 10px !important;
+    width: 250px !important;
+    font-size: 12px;
+}
+
+/* Hide routing panel by default or keep it minimal */
+.leaflet-routing-container-hide {
+    display: none;
+}
+
+/* Breadcrumb Polylines */
+.user-path {
+    stroke-dasharray: 4, 6;
+    animation: dash-flow 30s linear infinite;
+}
+
+@keyframes dash-flow {
+    from {
+        stroke-dashoffset: 200;
+    }
+
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Get Directions Button Styling */
+.directions-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+    transition: background 0.2s ease;
+    text-align: center;
+    font-size: 13px;
+}
+
+.directions-btn:hover {
+    background: #0056b3;
 }
